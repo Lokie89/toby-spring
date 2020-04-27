@@ -82,6 +82,25 @@
         생성하지도 않음, 자신도 어떻게 만들어지고 어디서 사용되는지 알 수 없음
         모든 제어 권한을 자신이 아닌 다른 대상에게 위임
 
+#### 1-5 스프링의 IoC
+###### 코드 추가
+    1. DaoFactory class @Configuration 등록
+    2. DaoFactory class userDao, connectionMaker @Bean 등록
+    3. UserDaoTest ApplicationContext 에서 위에서 등록한 userDao 추출 (getBean())
+###### gradle 추가
+    compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'
+    @Configuration, @Bean, ApplicationContext 사용
+    compile group: 'org.springframework', name: 'spring-context', version: '5.2.4.RELEASE'
+###### 정리
+    빈
+        스프링이 직접 IoC 방식으로 생성과 제어를 관리하는 오브젝트
+    빈 팩토리
+        스프링의 IoC 를 담당하는 핵심 컨테이너
+    애플리케이션 컨텍스트
+        빈 팩토리에 스프링이 제공하는 각종 부가 서비스를 추가로 제공하는 IoC 컨테이너
+    설정정보
+        애플리케이션 컨텍스트가 IoC 를 적용하기 위해 사용하는 메타정보
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
