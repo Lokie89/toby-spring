@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class NUserDao extends UserDao{
-    public Connection getConnection() throws ClassNotFoundException, SQLException {
-        // N 사 DB Connection 생성 코드
+public class NConnectionMaker implements ConnectionMaker{
+    @Override
+    public Connection makeConnection() throws ClassNotFoundException, SQLException {
         System.out.println(" N 사 ");
         Class.forName("com.mysql.jdbc.Driver");
         Connection c = DriverManager.getConnection(
-                "jdbc:mysql://localhost/tobyspring","root","1111"
+                "jdbc:mysql://localhost/tobyspring?useSSL=false&serverTimezone=UTC","root","1111"
         );
         return c;
     }
