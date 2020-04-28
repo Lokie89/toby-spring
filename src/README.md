@@ -157,6 +157,28 @@
     
     의존관계 주입의 장점은 관심사의 분리를 통해 얻어지는 높은 응집도에서 나온다
       
+#### 1-8 XML 을 이용한 설정
+###### 코드 추가
+    1. DaoFactory 를 대체할 applicationContext.xml 파일 추가
+    2. UserDao 의존 오브젝트 ConnectionMaker -> DataSource 로 변경
+    3. applicationContext.xml 파일의 DataSource 프로퍼티 추가
+###### gradle 추가
+    SimpleDriverDataSource 사용 ( jdbc 드라이버 클래스, jdbc url, id, pwd 등의 수정자 )
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '5.2.4.RELEASE'
+###### 정리
+    범용 DI 컨테이너를 사용하려면 오브젝트 사이의 의존정보를 일일이 자바 코드로 만들긴 번거롭다.
+    스프링은 다양한 방법으로 DI 의존관계 설정정보를 만들 수 있다.
+    
+    xml 파일에서 DI 의존관계를 설정할 때 사용 하는 <bean> 태그 안에서 property 설정은
+    <property> 태그를 통하여 할 수 있음. <property> 태그의 name 애트리뷰트는 DI 에 사용할
+    수정자 메소드의 프로퍼티 이름, ref 애트리뷰트는 주입할 오브젝트를 정의한 빈의 id 이다. 
+
+    <property> 태그의 애트리뷰트 중 value 값은 스트링 값을 사용한다.
+    그러나 다른 타입의 형태도 주입이 가능한데, 이는 스프링이 프로퍼티의 값을, 
+    "수정자 메소드의 파라미터 타입을 참고로 해서 적절한 형태로 변환해주기 때문"
+
+    xml 파일에서 정의한 의존관계 정보를 이용하는 작업에는 GenericXmlApllicationContext 를 사용
+    
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
