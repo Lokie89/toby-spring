@@ -290,10 +290,31 @@
 ###### 정리
     제한적인 리소스를 공유해 사용하는 서버에서 "예외처리"는 지켜야 할 원칙이다.
 
+#### 3-2 변하는 것과 변하지 않는 것
+###### 코드 추가
+    1. 전략 패턴을 사용하기 위한 StatementStrategy interface 추가
+    2. StatementStrategy interface 구현한 DeleteAllStatement class 추가
+    3. StatementStrategy interface 를 매개 변수로 받는 
+       try catch finally 를 분리한 jdbcContextWithStatementStrategy 메소드 구현
+    4. UserDao deleteAll 메소드에서 DeleteAllStatement 객체 생성 후 
+       jdbcContextWithStatementStrategy 메소드 사용
+###### 정리
+    템플릿 메소드 패턴
+        상속을 통해 기능을 확장해서 사용함
+        변하지 않는 부분은 슈퍼클래스에 두고 변하는 부분은 추상 메소드로 정의해 둬서
+        서브클래스에서 오버라이드하여 새롭게 정의해 쓰도록 함
+    
+    전략 패턴
+        확장에 해당하는 변하는 부분을 별도의 클래스로 만들어 추상화된 인터페이스를 통해 위임
+    
+    전략 패턴에 따르면 Context 가 어떤 전략을 사용하게 할 것인가는 Context 를 사용하는
+    Client 가 결정하는 게 일반적이다. Client 가 구체적인 전략의 하나를 선택하고 
+    오브젝트로 만들어서 Context 에 전달하는 것이다. Context 는 전달받은 
+    그 Strategy 구현 클래스의 오브젝트를 사용한다.
+    
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
-
 
