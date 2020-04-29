@@ -224,9 +224,48 @@
     픽스처
         테스트를 수행하는데 필요한 정보나 오브젝트
 
+#### 2-4 스프링 테스트 적용
+###### 코드 추가
+    1. UserDaoTest 의 RunWith 파라미터를 SpringJUnit4ClassRunner.class 로 변경
+    2. @ContextConfiguration 추가, 파라미터로 applicationContext.xml 지정
+    3. ApplicationContext @Autowired 통해 DI
+    4. UserDao @Autowired 통해 DI
+    5. testtobyspring database 추가
+    6. test-applicationContext.xml 추가
+    7. UserDaoTest @ContextConfiguration 파라미터 수정
+###### gradle 추가
+    SpringJUnit4ClassRunner class, @ContextConfiguration
+    testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.4.RELEASE'
+###### 문제점
+###### 정리
+    스프링 컨테이너에서 생성되는 오브젝트는 싱글톤 방식으로 생성되기 때문에 하나의 어플리케이션 
+    컨텍스트가 만들어져 사용된다. 그러나 JUnit 테스트 메소드를 실행 할때마다 생성되는 UserDaoTest의 오브젝트는 
+    매번 다른 주소값을 갖는 새로운 테스트 오브젝트를 생성한다.
+    
+    @Autowired 가 붙은 인스턴스 변수가 있으면, 변수 타입과 일치하는 컨텍스트 내의 빈을 찾는다.
+    또, 타입으로 가져올 빈 하나를 선택할 수 없는 경우에는 변수의 이름과 같은 이름의 빈이 있는지 확인한다.
+    변수 이름으로도 빈을 찾을 수 없는 경우에는 예외가 발생한다.
+    
+    DI 를 적용할 때 인터페이스를 둬야 하는 이유
+    1. 소프트웨어 개발에서 절대로 바뀌지 않는 것은 없다.
+       당장 클래스의 변경이 없다고 하더라도 변경이 필요한 상황이 닥쳤을 때 수정에 들어가는 시간과 비용의 부담을 줄일수 있다.
+    2. 클래스의 구현 방식은 바뀌지 않는다고 하더라도 인터페이스를 두고 DI를 적용하게 해두면
+       다른 차원의 서비스 기능을 도입할 수 있기 때문이다.
+       새로운 기능을 넣기 위해 기존 코드는 수정할 필요가 없다.
+    3. 테스트 때문이다.
+       효율적인 테스트를 손쉽게 만들기 위해서 DI를 적용해야 한다. 
+    
+    DataSource 같은 경우에는 실제 운영 DB와 개발용 ( TEST ) DB를 다르게 가지고 가는 방법이 좋다.
+    따라서 개발용 DB 를 따로 만들고 해당 테스트 클래스 또는 메소드에 @DirtiesContext 를 사용한다.
+    
+    @DirtiesContext 는 해당 클래스 또는 메소드의 테스트에서 애플리케이션 컨텍스트의 상태를 변경한다는 것을 알려준다.
+    이 애노테이션이 붙은 테스트 클래스 또는 메소드에는 애플리케이션 컨텍스트 공유를 허용하지 않는다.
+    
+    @DirtiesContext 사용 후 코드 내에 수동으로 DI 를 설정하는 것보단
+    따로 xml 파일을 하나 더 생성해 해당 테스트 클래스에 적용해주는 것이 더 좋은 방법이다.
+     
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
-
