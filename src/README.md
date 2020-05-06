@@ -384,9 +384,36 @@
     
     템플릿/콜백 패턴의 콜백은 보통 단일 메소드를 인터페이스를 사용
 
+#### 3-6 스프링의 JdbcTemplate
+###### 코드 추가
+    1. UserDao 의 JdbcContext 를 스프링의 JdbcTemplate 으로 대체
+    2. JdbcTemplate 의 update, query, queryForObject 를 통하여 각 메서드 로직 대체
+###### 정리
+    스프링의 제공하는 템플릿/콜백 패턴을 적용하는 클래스 JdbcTemplate
+    update :
+        PreparedStatementCreator 인터페이스의 구현체를 익명 클래스로 구현하여 매개변수로 넣어줌
+        jdbcTemplate 이 가지고 있는 dataSource 으로 만들어진 Connection 을 매개 변수로 갖는 
+        createPreparedStatement 메서드 실행
+        또는 sql 문을 매개 변수로 넣어줌
+        매개 변수가 필요한 경우 PreparedStatementCreator 구현체 또는 sql 문 뒤에 차례로 넣어줌
+        return 값 없음. 
+    query :
+        return 값이 필요한 경우,
+        PreparedStatementCreator 구현체와, ResultSetExtractor 구현체를 파라미터로 받음
+        PreparedStatementCreator 후 나온 결과 값을 ResultSetExtractor 의 extractData 메서드
+        파라미터 ResultSet 으로 넘겨줌
+    queryForObject :
+        query 파라미터 중 ResultSetExtractor 대신 RowMapper 사용
+        차이점은 ResultSetExtractor 는 ResultSet 을 한 번 전달받아 추출 작업을 진행하는데 반해
+        RowMapper 는 ResultSet 의 로우 하나를 매핑하기 위해 사용되기 때문에 여러번 호출될 수 있다.
+        SQL을 실행해서 받은 로우의 개수가 하나가 아니라면 예외를 던진다.
+
+    테스트를 작성할 때 항상 네거티브 테스트부터 만들 것
+    
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
+
 
