@@ -85,8 +85,8 @@
 #### 1-5 스프링의 IoC
 ###### 코드 추가
     1. DaoFactory class @Configuration 등록
-    2. DaoFactory class userDao, connectionMaker @Bean 등록
-    3. UserDaoTest ApplicationContext 에서 위에서 등록한 userDao 추출 (getBean())
+    2. DaoFactory class userDaoJdbc, connectionMaker @Bean 등록
+    3. UserDaoTest ApplicationContext 에서 위에서 등록한 userDaoJdbc 추출 (getBean())
 ###### gradle 추가
     compile group: 'org.springframework', name: 'spring-core', version: '5.2.4.RELEASE'
     @Configuration, @Bean, ApplicationContext 사용
@@ -445,6 +445,32 @@
         대부분의 SQLException 은 복구가 불가능하다.
         따라서 스프링의 JdbcTemplate 템플릿과 콜백 안에서 발생하는 모든 SQLException 을 런타임 예외인
         DataAccessException 으로 포장해서 던져주고 있다.
+        
+#### 4-2 예외 전환
+###### 코드 추가
+    1. DB에 독립적인 UserDao 생성을 위한 interface 생성 
+        ( Jdbc를 사용하는 UserDao 를 UserDaoJdbc 로 변경 UserDao interface 생성 ) 
+###### 정리
+    DataAccessException 은 SQLException 에 담긴 다루기 힘든 상세한 예외 정보를 의미 있고
+    일관성 있는 예외로 전환해서 추상화해주려는 용도로 쓰인다.
+    
+    JDBC 의 한계
+        1. 대부분의 DB는 표준을 따르지 않는 비표준 문법과 기능을 제공한다.
+           이에 따라 작성된 비표준 SQL 은 DAO 코드에 들어가고 해당 DAO 는 특정 DB에 종속적인 코드가 되고 만다.
+        2. DB 마다 SQL 만 다른 것이 아니라 에러의 종류와 원인도 제각각이다.
+           DB 마다 다른 에러 코드를 대신할 수 있도록 XOPEN SQL 스펙에 정의된 SQL 상태 코드를 따르게 되어있지만,
+           DB 의 JDBC 드라이버에서 SQLException 에 담을 상태 코드를 정확하게 만들어 주지 않는다.
+        따라서 SQLException 에 담긴 SQL 상태 코드는 신뢰할 수 없고, DB 업체별로 만들어 유지해 오고 있는
+        DB 전용 에러 코드가 더 정확한 정보
+        
+    스프링은 이런 JDBC 의 한계를 극복하기 위해 DataAccessException 이라는 런타임 예외를 정의하고
+    데이터 엑세스 작업 중에 발생할 수 있는 예외상황을 수십 가지 예외로 분류하고 이를 추상화해 정의한
+    다양한 예외 클래스를 제공한다.
+    
+    스프링에서는 DB 별 에러 코드를 분류해서 스프링이 정의한 예외 클래스와 매핑해놓은
+    에러 코드 매핑 정보 테이블을 만들어두고 이를 이용한다.
+    
+    따라서 JdbcTemplate 을 이용한다면 JDBC에서 발생하는 DB 관련 예외는 거의 신경 쓰지 않아도 된다.
         
 #### 1-1
 ###### 코드 추가

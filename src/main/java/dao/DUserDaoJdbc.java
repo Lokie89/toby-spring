@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DUserDao extends UserDao{
+public class DUserDaoJdbc extends UserDaoJdbc {
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         // D 사 DB Connection 생성 코드
         System.out.println(" D 사 ");
