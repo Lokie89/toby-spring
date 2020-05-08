@@ -26,6 +26,9 @@ CREATE TABLE `users` (
   `id` varchar(10) NOT NULL,
   `name` varchar(20) NOT NULL,
   `password` varchar(10) NOT NULL,
+  `level` tinyint NOT NULL,
+  `login` int NOT NULL,
+  `recommend` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -39,4 +42,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-04-29 10:28:09
+-- Dump completed on 2020-05-08  9:45:07
