@@ -8,18 +8,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("test-applicationContext.xml")
 public class UserServiceTest {
 
     @Autowired
+    DataSource dataSource;
+
+    @Autowired
     UserService userService;
+
+    @Autowired
+    TestUserService testUserService;
 
     @Autowired
     UserDao userDao;
@@ -38,7 +46,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void upgradeLevels() {
+    public void upgradeLevels() throws Exception {
         userDao.deleteAll();
 
         for (User user : users) {
@@ -90,6 +98,25 @@ public class UserServiceTest {
 
         assertThat(userWithLevel.getLevel(), is(userWithLevelRead.getLevel()));
         assertThat(userWithoutLevel.getLevel(), is(Level.BASIC));
+    }
+
+    @Test
+    public void upgradeAllOrNothing() throws Exception {
+        testUserService.setId(users.get(3).getId());
+        testUserService.setUserDao(this.userDao);
+        testUserService.setDataSource(this.dataSource);
+
+        userDao.deleteAll();
+        for (User user : users) {
+            userDao.add(user);
+        }
+        try {
+            testUserService.upgradeLevels();
+            fail("TestUserServiceException expected");
+        } catch (TestUserServiceException e) {
+
+        }
+        checkLevelUpgraded(users.get(1), false);
     }
 
 }
