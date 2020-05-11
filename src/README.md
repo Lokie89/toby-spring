@@ -588,9 +588,41 @@
     그 결과로 단일 책임 원칙뿐 아니라 개방 폐쇄 원칙도 잘 지켜지고, 모듈 간에 결합도가 낮아서
     서로의 변경이 영향을 주지 않고, 같은 이유로 변경이 단일 책임에 집중되는 응집도 높은 코드가 나온다.
 
+#### 5-4 메일 서비스 추상화
+###### 코드 추가
+    1. User email 필드 추가
+    2. JavaMail 에 대한 추상화 인터페이스 MailSender 사용
+    3. 스프링 DI 적
+    4. 테스트용 DummyMailSender 추가
+    5. 목 오브젝트 MockMailSender 추가
+###### gradle 추가
+    Session class 사용
+    compile group: 'javax.mail', name: 'mail', version: '1.4.7'
+    compile group: 'javax.activation', name: 'activation', version: '1.1.1'
+    MailSender, JavaMailSenderImple 사용
+    compile group: 'org.springframework', name: 'spring-context-support', version: '5.2.5.RELEASE'
+###### 정리
+    자바에서 메이ㄹ을 발송할 때는 표준 기술인 JavaMail 을 사용
+    그러나 JavaMail 은 확장이나 지원이 불가능하도록 만들어진 악명 높은 표준 API 중 하나
+    그래서 스프링에서는 JavaMail 을 사용해 만든 추상화 기능을 가진 인터페이스 제공
+    MailSender 라는 이 인터페이스는 SimpleMailMessage 라는 인터페이스를 매개 변수로 받아 발송하는 기능만 가지고 있음
+    
+    일반적으로 서비스 추사화란 유사하나 사용 방법이 다른 로우레벨의 다양한 기술에 대해 
+    추상 인터페이스와 "일관성 있는 접근 방법"을 제공해주는 것을 말함
+    
+    테스트 대역
+    테스트 대상이 되는 오브젝트의 기능에만 충실하게 수행하면서 빠르게,
+    자주 테스트를 실행할 수 있도록 사용하는 오브젝트
+    
+    테스트 스텁
+    테스트 대상 오브젝트의 의존객체로서 존재하면서 테스트 동안에 코드가 정상적으로 수행할 수 있도록 돕는 것
+    
+    목 오브젝트
+    스텁처럼 테스트 오브젝트가 정상적으로 실행되도록 도와주면서, 테스트 오브젝트와 자신의 사이에서
+    일어나는 커뮤니케이션 내용을 저장해뒀다가 테스트 결과를 검증하는 데 활용
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
-

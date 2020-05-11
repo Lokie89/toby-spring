@@ -17,7 +17,9 @@
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="generalUserLevelUpgradePolicy" class="dao.GeneralUserLevelUpgradePolicy"/>
+    <bean id="generalUserLevelUpgradePolicy" class="dao.GeneralUserLevelUpgradePolicy">
+        <property name="mailSender" ref="mailSender"/>
+    </bean>
 
     <bean id="userService" class="dao.UserService">
         <property name="userDao" ref="userDao"/>
@@ -34,4 +36,6 @@
         <property name="userDao" ref="userDao"/>
         <property name="userLevelUpgradePolicy" ref="generalUserLevelUpgradePolicy"/>
     </bean>
+
+    <bean id="mailSender" class="dao.DummyMailSender"/>
 </beans>

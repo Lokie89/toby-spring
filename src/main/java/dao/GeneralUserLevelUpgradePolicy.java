@@ -2,6 +2,8 @@ package dao;
 
 import domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 
 public class GeneralUserLevelUpgradePolicy implements UserLevelUpgradePolicy {
 
@@ -10,6 +12,17 @@ public class GeneralUserLevelUpgradePolicy implements UserLevelUpgradePolicy {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    MailSender mailSender;
+
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public boolean canUpgradeLevel(User user) {
@@ -30,5 +43,17 @@ public class GeneralUserLevelUpgradePolicy implements UserLevelUpgradePolicy {
     public void upgradeLevel(User user) {
         user.upgradeLevel();
         userDao.update(user);
+        sendUpgradeEMail(user);
+    }
+
+    private void sendUpgradeEMail(User user) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getEmail());
+        mailMessage.setFrom("useradmin@ksug.org");
+        mailMessage.setSubject("Upgrade 안내");
+        mailMessage.setText("사용자님의 등급이 " + user.getLevel().name()
+                + "로 업그레이드 되었습니다.");
+
+        this.mailSender.send(mailMessage);
     }
 }
