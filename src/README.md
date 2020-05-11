@@ -545,10 +545,30 @@
     트랜잭션을 만들고 이를 관리할 필요가 잇따면 미리 DB 커넥션을 생성한 다음 트랜잭션 동기화를 해주고 사용하면 된다.
      
 
+#### 5-2 트랜잭션 서비스 추상화-2
+###### 코드 추가
+    1. 스프링이 제공하는 트랜잭션 경계설정을 위한 추상 인터페이스 PlatformTransactionManager 사용
+    2. PlatformTransactionManager DI 적용
+###### 정리
+    하나의 트랜잭션 안에서 여러 개의 DB 에 데이터를 넣는 작업을 해야 할 필요가 있을 때
+    JDBC 의 Connection 을 이용한 트랜잭션 방식 ( 로컬 트랜잭션 ) 으로는 하나의 DB Connection 에 종속되기 떄문에 불가함
+    별도의 트랜잭션 관리자를 통해 트랜잭션을 관리하는 글로벌 트랜잭션 방식을 사용
+    스프링은 트랜잭션 기술의 공통점을 담은 트랜잭션 추상화 기술을 제공
+    PlatformTransactionManager 인터페이스 사용하여
+    JTA 는 JTATransactionManager
+    Hibernate 는 HibernateTransactionManager
+    JPA 는 JPATransactionManager 를 사용하여
+    트랜잭션 경계설정을 만듬
+    
+    어떤 클래스든 스프링의 빈으로 등록할 떄 먼저 검토해야 할 것은 점
+    싱글톤으로 만들어져 여러 스레드에서 동시에 사용해도 괜찮은가 하는 가
+    
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
+
 
 
