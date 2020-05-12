@@ -30,7 +30,10 @@ public class UserServiceTest {
     UserService userService;
 
     @Autowired
-    TestUserService testUserService;
+    UserServiceImpl userServiceImpl;
+
+    @Autowired
+    TestUserServiceImpl testUserService;
 
     @Autowired
     UserDao userDao;
@@ -69,7 +72,8 @@ public class UserServiceTest {
         GeneralUserLevelUpgradePolicy generalUserLevelUpgradePolicy = new GeneralUserLevelUpgradePolicy();
         generalUserLevelUpgradePolicy.setMailSender(mockMailSender);
         generalUserLevelUpgradePolicy.setUserDao(userDao);
-        userService.setUserLevelUpgradePolicy(generalUserLevelUpgradePolicy);
+
+        userServiceImpl.setUserLevelUpgradePolicy(generalUserLevelUpgradePolicy);
 
         userService.upgradeLevels();
 
@@ -126,18 +130,21 @@ public class UserServiceTest {
 
     @Test
     public void upgradeAllOrNothing() {
-        testUserService.setId(users.get(3).getId());
+
+        TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
         testUserService.setUserDao(this.userDao);
-        testUserService.setDataSource(this.dataSource);
-        testUserService.setTransactionManager(this.transactionManager);
         testUserService.setUserLevelUpgradePolicy(this.generalUserLevelUpgradePolicy);
+
+        UserServiceTx txUserService = new UserServiceTx();
+        txUserService.setTransactionManager(transactionManager);
+        txUserService.setUserService(testUserService);
 
         userDao.deleteAll();
         for (User user : users) {
             userDao.add(user);
         }
         try {
-            testUserService.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 

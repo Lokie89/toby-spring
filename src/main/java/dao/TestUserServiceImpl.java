@@ -2,9 +2,17 @@ package dao;
 
 import domain.User;
 
-public class TestUserService extends UserService {
+public class TestUserServiceImpl extends UserServiceImpl {
 
     private String id;
+
+    public TestUserServiceImpl(){
+
+    }
+
+    public TestUserServiceImpl(String id) {
+        this.id = id;
+    }
 
     public void setId(String id) {
         this.id = id;
