@@ -26,9 +26,11 @@
         <property name="userLevelUpgradePolicy" ref="generalUserLevelUpgradePolicy"/>
     </bean>
 
-    <bean id="userService" class="dao.UserServiceTx">
+    <bean id="userService" class="dao.TxProxyFactoryBean">
         <property name="transactionManager" ref="transactionManager"/>
-        <property name="userService" ref="userServiceImpl"/>
+        <property name="target" ref="userServiceImpl"/>
+        <property name="pattern" value="upgradeLevels"/>
+        <property name="serviceInterface" value="dao.UserService"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
