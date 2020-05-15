@@ -35,10 +35,7 @@ public class UserServiceTest {
     UserService userService;
 
     @Autowired
-    UserServiceImpl userServiceImpl;
-
-    @Autowired
-    TestUserServiceImpl testUserService;
+    UserService testUserService;
 
     @Autowired
     UserDao userDao;
@@ -134,23 +131,14 @@ public class UserServiceTest {
     }
 
     @Test
-    @DirtiesContext
     public void upgradeAllOrNothing() throws Exception {
-
-        TestUserServiceImpl testUserService = new TestUserServiceImpl(users.get(3).getId());
-        testUserService.setUserDao(this.userDao);
-        testUserService.setUserLevelUpgradePolicy(this.generalUserLevelUpgradePolicy);
-
-        ProxyFactoryBean txProxyFactoryBean = context.getBean("&userService", ProxyFactoryBean.class);
-        txProxyFactoryBean.setTarget(testUserService);
-        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
 
         userDao.deleteAll();
         for (User user : users) {
             userDao.add(user);
         }
         try {
-            txUserService.upgradeLevels();
+            this.testUserService.upgradeLevels();
             fail("TestUserServiceException expected");
         } catch (TestUserServiceException e) {
 

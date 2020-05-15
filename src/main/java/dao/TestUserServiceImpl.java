@@ -4,7 +4,7 @@ import domain.User;
 
 public class TestUserServiceImpl extends UserServiceImpl {
 
-    private String id;
+    private String id = "madnite1";
 
     public TestUserServiceImpl(){
 

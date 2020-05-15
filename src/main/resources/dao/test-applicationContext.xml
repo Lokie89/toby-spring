@@ -21,39 +21,30 @@
         <property name="mailSender" ref="mailSender"/>
     </bean>
 
-    <bean id="userServiceImpl" class="dao.UserServiceImpl">
+    <bean id="userService" class="dao.UserServiceImpl">
         <property name="userDao" ref="userDao"/>
         <property name="userLevelUpgradePolicy" ref="generalUserLevelUpgradePolicy"/>
-    </bean>
-
-    <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <bean id="testUserService" class="dao.TestUserServiceImpl">
-        <property name="userDao" ref="userDao"/>
-        <property name="userLevelUpgradePolicy" ref="generalUserLevelUpgradePolicy"/>
-    </bean>
+    <bean id="testUserService" class="dao.TestUserServiceImpl" parent="userService"/>
 
     <bean id="mailSender" class="dao.DummyMailSender"/>
 
     <bean id="transactionAdvice" class="dao.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager"/>
     </bean>
-    <bean id="transactionPointcut" class="org.springframework.aop.support.NameMatchMethodPointcut">
-        <property name="mappedName" value="upgrade*"/>
+    <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+        <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))"/>
     </bean>
     <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
         <property name="pointcut" ref="transactionPointcut"/>
         <property name="advice" ref="transactionAdvice"/>
     </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
 </beans>

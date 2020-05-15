@@ -18,6 +18,7 @@ dependencies {
     compile group: 'javax.mail', name: 'mail', version: '1.4.7'
     compile group: 'javax.activation', name: 'activation', version: '1.1.1'
     compile group: 'org.springframework', name: 'spring-context-support', version: '5.2.5.RELEASE'
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.4'
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.4.RELEASE'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.3.3'
 }
