@@ -804,9 +804,21 @@
     포인트컷이 필요 없을 때는 ProxyFactoryBean 의 addAdvice() 메서드를 호출해서 어드바이스만 등록하면 된다.
     어드바이스와 포인트컷을 묶은 오브젝트를 인터페이스 이름을 따서 어드바이저 라고 한다.
     
+#### 6-4 스프링의 프록시 팩토리 빈-2
+###### 코드 추가
+    1. MethodInterceptor 구현체 TransactionAdvice 추가
+    2. 구현한 TransactionAdvice 와 NameMatchMethodPointcut 을 이용하여 Advisor(DefaultPointcutAdvisor) DI 
+###### 정리
+    xml 스프링 환경설정 파일에서
+    어드바이저는 interceptorNames 라는 프로퍼티를 통해 넣는다.
+    어드바이스와 어드바이저를 혼합해서 설정할 수 있도록 property 태그 대신 list 와 value 태그를 통해
+    여러 개의 값을 넣을 수 있또록 하고 있다.
+    value 태그에는 어드바이스 또는 어드바이저로 설정한 빈의 아이디를 넣으면 된다.
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가
 ###### 문제점
 ###### 정리
+
 
