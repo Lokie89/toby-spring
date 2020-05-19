@@ -2,15 +2,17 @@ package dao;
 
 import domain.User;
 
-public class TestUserServiceImpl extends UserServiceImpl {
+import java.util.List;
+
+public class TestUserService extends UserServiceImpl {
 
     private String id = "madnite1";
 
-    public TestUserServiceImpl(){
+    public TestUserService() {
 
     }
 
-    public TestUserServiceImpl(String id) {
+    public TestUserService(String id) {
         this.id = id;
     }
 
@@ -23,5 +25,12 @@ public class TestUserServiceImpl extends UserServiceImpl {
             throw new TestUserServiceException();
         }
         super.upgradeLevel(user);
+    }
+
+    public List<User> getAll() {
+        for (User user : super.getAll()) {
+            super.update(user);
+        }
+        return null;
     }
 }
