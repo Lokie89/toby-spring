@@ -13,8 +13,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class UserDaoJdbc implements UserDao {
+
+    private SqlService sqlService;
+
+    public void setSqlService(SqlService sqlService) {
+        this.sqlService = sqlService;
+    }
+
     JdbcTemplate jdbcTemplate;
 
     private RowMapper<User> userRowMapper =
@@ -41,7 +49,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     public void add(User user) {
-        this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend, email) values(?, ?, ?, ?, ?, ?, ?)",
+        this.jdbcTemplate.update(this.sqlService.getSql("userAdd"),
                 user.getId(), user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
     }
 
