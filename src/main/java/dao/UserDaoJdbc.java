@@ -54,7 +54,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     public User get(String id) {
-        return this.jdbcTemplate.queryForObject("select * from users where id = ?",
+        return this.jdbcTemplate.queryForObject(this.sqlService.getSql("userGet"),
                 new Object[]{id}, this.userRowMapper);
     }
 
@@ -64,7 +64,7 @@ public class UserDaoJdbc implements UserDao {
                 new PreparedStatementCreator() {
                     @Override
                     public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                        return con.prepareCall("delete from users");
+                        return con.prepareCall(sqlService.getSql("userDeleteAll"));
                     }
                 }
         );
@@ -74,7 +74,7 @@ public class UserDaoJdbc implements UserDao {
         return this.jdbcTemplate.query(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                return con.prepareStatement("select count(*) from users");
+                return con.prepareStatement(sqlService.getSql("userGetCount"));
             }
         }, new ResultSetExtractor<Integer>() {
             @Override
@@ -88,13 +88,11 @@ public class UserDaoJdbc implements UserDao {
     }
 
     public List<User> getAll() {
-        return this.jdbcTemplate.query("select * from users order by id", this.userRowMapper);
+        return this.jdbcTemplate.query(this.sqlService.getSql("userGetAll"), this.userRowMapper);
     }
 
     public void update(User user) {
-        this.jdbcTemplate.update(
-                "update users set name = ?, password = ?, level = ?, login= ?, recommend = ? , email = ? " +
-                        "where id = ?",
+        this.jdbcTemplate.update(this.sqlService.getSql("userUpdate"),
                 user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail(),
                 user.getId()
         );
