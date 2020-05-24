@@ -1074,6 +1074,34 @@
     다만 자기참조 빈을 만들어보는 것은, 책임과 관심사가 복잡하게 얽혀 있어서 
     확장이 힘들고 변경에 취약한 구조의 클래스를 유연한 구조로 만들려고 할 때 시도해 볼수 있는 방법이다. 
     
+#### 7-3 서비스 추상화 적용
+###### 코드 추가
+    1. XML 파일을 Java 오브젝트로 변경해줄 여러 OXM 기술을 사용하기 위한 추상화 클래스들 추가
+###### gradle 추가
+    // oxm 사용
+    compile group: 'org.springframework', name: 'spring-oxm', version: '3.0.0.RELEASE'
+    // jaxb xml bind 에러
+    compile group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
+    // postconstruct 에러
+    compile group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+    // castor 사용
+    compile group: 'org.codehaus.castor', name: 'com.springsource.org.castor', version: '1.2.0'
+###### 정리
+    XML 과 자바 오브젝트를 매핑해서 상호 변환해주는 기술을 OXM 이라고 한다.
+    
+    두 개의 클래스를 강하게 결합하고 더 이상의 확장이나 변경을 제한해두는 이유는 서비스 구조로 최적화 하기 위해서다.
+    편리한 확장과 유연한 변경을 위해서 클래스를 분리하고 빈을 따로 등록해 DI 할 수 있도록 기본 구조를 가져간 것은 좋지만,
+    자꾸 늘어나는 빈의 개수와 반복되는 비슷한 DI 구조가 불편하게 느껴질 수도 있다.
+    
+    스프링의 거의 모든 API 는 외부의 리소스 정보가 필요할 때는 항상 이 Resource 추상화를 이용한다.
+    스프링에는 URL 클래스와 유사하게 접두어를 이용해 ResourceLoader 를 통하여 Resource 오브젝트를 선언하는 방법이 있다.
+    접두어가 없는 경우에는 리소스 로더의 구현 방식에 따라 리소스를 가져오는 방식이 달라진다.
+    접두어를 붙여주면 리소스 로더의 종류와 상관없이 접두어가 의미하는 위치와 방법을 이용해 리소스를 읽어온다.
+    
+    Resource 를 사용할 때는 Resource 오브젝트가 실제 리소스는 아니라는 점을 주의해야 한다.
+    Resource 는 단지 리소스에 접근할 수 있는 추상화된 핸들러일 뿐이다.
+    따라서 Resource 타입의 오브젝트가 만들어졌다고 해도 실제로 리소스가 존재하지 않을 수 있다.
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가

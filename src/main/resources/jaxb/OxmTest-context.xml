@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="jaxb"/>
+    </bean>
+    <bean id="sqlService" class="dao.OxmSqlService">
+        <property name="unmarshaller" ref="unmarshaller"/>
+        <property name="sqlmap" value="classpath:jaxb/sqlmap.xml"/>
+<!--        <property name="sqlmap" value="file:jaxb/sqlmap.xml"/>-->
+<!--        <property name="sqlmap" value="http:www.epril.com/resources/sqlmap.xml"/>-->
+    </bean>
+</beans>
