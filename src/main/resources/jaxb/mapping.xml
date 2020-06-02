@@ -5,12 +5,12 @@
 <mapping>
     <class name="jaxb.Sqlmap">
         <map-to xml="sqlmap"/>
-        <field name="sql" type="jaxb.SqlType" required="true" collection="arrayList">
-            <bind-xml name="sql" node="element"/>
+        <field name="updatable" type="jaxb.SqlType" required="true" collection="arrayList">
+            <bind-xml name="updatable" node="element"/>
         </field>
     </class>
     <class name="jaxb.SqlType">
-        <map-to xml="sql"/>
+        <map-to xml="updatable"/>
         <field name="key" type="string" required="true">
             <bind-xml name="key" node="attribute"/>
         </field>

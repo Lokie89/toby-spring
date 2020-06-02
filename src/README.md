@@ -394,8 +394,8 @@
         PreparedStatementCreator 인터페이스의 구현체를 익명 클래스로 구현하여 매개변수로 넣어줌
         jdbcTemplate 이 가지고 있는 dataSource 으로 만들어진 Connection 을 매개 변수로 갖는 
         createPreparedStatement 메서드 실행
-        또는 sql 문을 매개 변수로 넣어줌
-        매개 변수가 필요한 경우 PreparedStatementCreator 구현체 또는 sql 문 뒤에 차례로 넣어줌
+        또는 updatable 문을 매개 변수로 넣어줌
+        매개 변수가 필요한 경우 PreparedStatementCreator 구현체 또는 updatable 문 뒤에 차례로 넣어줌
         return 값 없음. 
     query :
         return 값이 필요한 경우,
@@ -1104,7 +1104,7 @@
 
 #### 7-4 인터페이스 상속을 통한 안전한 기능확장
 ###### 코드 추가
-    1. 기존 SqlRegistry 의 기능을 확장( sql 업데이트 기능 )한 UpdatableSqlRegistry 인터페이스 추가
+    1. 기존 SqlRegistry 의 기능을 확장( updatable 업데이트 기능 )한 UpdatableSqlRegistry 인터페이스 추가
 ###### 정리
     DI 를 적용하려면 최소한 두개 이상의, 의존 관계를 가지고 소ㅓ로 협력해서 일하는 오브젝트가 필요하다.
     적절한 책임에 따라 오브젝트를 분리해주고 항상 오브젝트는 자유롭게 확장될 수 있다는 것을 염두에 둬야 한다.
@@ -1126,6 +1126,21 @@
     인터페이스를 적절하게 분리하고 확장하는 방법을 통해 오브젝트 사이의 의존관계를 명확하게 해주고,
     기존 의존관계에 영향을 주지 않으면서 유연한 확장성으 얻는 방법이 무엇인지 항상 고민해야 한다.
     
+#### 7-5 DI 를 이용해 다양한 구현 방법 적용하기
+###### 코드 추가
+    1. 멀티 스레드 환경 대비 기존 sql 을 담고 있던 HashMap 을 ConcurrentHashMap 으로 변환
+    2. 스프링의 내장형 DB 를 사용하는 EmbeddedDbSqlRegistry 추가
+    3. EmbeddedDbSqlRegistry 에 트랜잭션 적용
+###### gradle 추가
+    // 내장 DB 사용
+    testCompile group: 'hsqldb', name: 'hsqldb', version: '1.8.0.10'
+###### 정리
+    굳이 모든 테스트를 작성한 후에 코드를 만들 필요는 없다.
+    만들어야할 기능에 대해 테스트 메서드를 하나씩 추가하면서 이 테스트를 성공 시킬 수 있게 만들어도 좋고,
+    테스트를 먼저 만드는 게 불편하다면 인단 코드를 먼저 만들고 그에 대한 테스트를 바로 추가해서 확인해 보는 방법도 나쁘지 않다.
+    중요한 건 코드를 작성한 다음 테스트를 만들어 검증하는 그 사이의 간격을 가능한 짧게 하고,
+    예외상황을 포함한 기능을 세세하게 검증하도록 테스트를 만드는 것이다.
+
 #### 1-1
 ###### 코드 추가
 ###### gradle 추가

@@ -8,8 +8,9 @@
     </bean>
     <bean id="sqlService" class="dao.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller"/>
-        <property name="sqlmap" value="classpath:jaxb/sqlmap.xml"/>
+        <property name="sqlRegistry" ref="sqlRegistry"/>
 <!--        <property name="sqlmap" value="file:jaxb/sqlmap.xml"/>-->
 <!--        <property name="sqlmap" value="http:www.epril.com/resources/sqlmap.xml"/>-->
     </bean>
+    <bean id="sqlRegistry" class="dao.ConcurrentHashMapSqlRegistry"/>
 </beans>
