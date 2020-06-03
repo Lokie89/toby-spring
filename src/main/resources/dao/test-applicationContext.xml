@@ -2,83 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
 
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url"
-                  value="jdbc:mysql://localhost/testtobyspring?useSSL=false&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true"/>
-        <property name="username" value="root"/>
-        <property name="password" value="1111"/>
-    </bean>
 
-    <bean id="userDao" class="dao.UserDaoJdbc">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sqlService" ref="sqlService"/>
-    </bean>
 
     <bean id="sqlService" class="dao.DefaultSqlService"/>
 
     <bean id="sqlReader" class="dao.JaxbXmlSqlReader">
         <property name="sqlMapFile" value="sqlmap.xml"/>
     </bean>
-    <bean id="sqlRegistry" class="updatable.EmbeddedDbSqlRegistry">
-        <property name="dataSource" ref="embeddedDatabase"/>
-    </bean>
 
-    <bean id="jdbcContext" class="dao.JdbcContext">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="generalUserLevelUpgradePolicy" class="dao.GeneralUserLevelUpgradePolicy">
-        <property name="mailSender" ref="mailSender"/>
-    </bean>
-
-    <bean id="userService" class="dao.UserServiceImpl">
-        <property name="userDao" ref="userDao"/>
-        <property name="userLevelUpgradePolicy" ref="generalUserLevelUpgradePolicy"/>
-    </bean>
-
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="testUserService" class="dao.TestUserService" parent="userService"/>
-
-    <bean id="mailSender" class="dao.DummyMailSender"/>
-
-    <bean id="transactionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="get*">PROPAGATION_REQUIRED, readOnly</prop>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
-    </bean>
-    <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
-        <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))"/>
-    </bean>
-    <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
-        <property name="pointcut" ref="transactionPointcut"/>
-        <property name="advice" ref="transactionAdvice"/>
-    </bean>
 
     <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
 
-    <tx:annotation-driven/>
-    <context:annotation-config/>
-
-    <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-        <jdbc:script location="updatable/sqlRegistrySchema.sql"/>
-    </jdbc:embedded-database>
 
 </beans>
